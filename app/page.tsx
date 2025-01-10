@@ -8,6 +8,8 @@ export default function Home() {
        alt="Lamburghini image"
        width={30}
        height={30}
+       quality={100}
+       formats={['webp']}
        priority
        className="w-full h-screen bg-center object-cover"
        />
