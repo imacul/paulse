@@ -1,6 +1,7 @@
-"use client"
+//"use client";
 
 import { z } from "zod"
+import axios from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 const formSchema = z.object({
   name: z.string().min(2).max(50),
@@ -21,6 +23,7 @@ const formSchema = z.object({
 
 import  Modal from "@/components/ui/modal";
 import { useStoreModal } from "@/hooks/use-store-modal"
+
 
 const StoreModal = () =>{
   // 1. Define your form.
@@ -31,11 +34,24 @@ const StoreModal = () =>{
     },
   })
  
-  // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    console.log(values)
+ 
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
+    try {
+      setLoading(true);
+      const response = await axios.post('/api/stores', values);
+
+      console.log(response.data)
+    } catch (error) {
+      console.log(error);
+
+    } finally{
+      setLoading(true);
+    }
+
   }
+
+  const [loading, setLoading] = useState(false);
   
   const storeModal = useStoreModal();
   return(
@@ -51,15 +67,15 @@ const StoreModal = () =>{
             <FormItem>
               <FormLabel>Name</FormLabel>
               <FormControl>
-                <Input placeholder="store name" {...field} />
+                <Input disabled={loading} placeholder="store name" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <div className="pt-6 space-x-2 flex items-center justify-end w-full">
-        <Button type="submit">Continue</Button>
-        <Button variant="outline" onClick={storeModal.onClose}>Cancel</Button>
+        <Button disabled={loading} type="submit">Continue</Button>
+        <Button disabled={loading} variant="outline" onClick={storeModal.onClose}>Cancel</Button>
         </div>
       </form>
     </Form>
