@@ -39,14 +39,14 @@ const StoreModal = () =>{
 
     try {
       setLoading(true);
-      const response = await axios.post('/api/stores', values);
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/stores`, values);
 
       console.log(response.data)
     } catch (error) {
       console.log(error);
 
     } finally{
-      setLoading(true);
+      setLoading(false);
     }
 
   }
